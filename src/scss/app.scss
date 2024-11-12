@@ -6,7 +6,19 @@
 body {
   background-color: $background;
 }
-
+.cart__item-price {
+  display: flex;
+  flex-direction: column;
+  span {
+    font-size: 15px;
+  }
+}
+.cart__item-price_more {
+  margin-left: 8px;
+}
+.header_text {
+  display: flex;
+}
 .wrapper {
   width: calc(100vw - 100px);
   height: 100%;
@@ -20,7 +32,15 @@ body {
   }
 }
 
+.sort__label svg {
+  transition: transform 0.1s ease-in-out;
+}
+.svg_active {
+  transform: rotate(180deg);
+}
+
 .content {
+  user-select: none;
   padding: 40px 0;
 
   &__title {

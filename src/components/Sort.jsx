@@ -1,4 +1,5 @@
 import React from 'react';
+import { useClickAway } from 'react-use';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSort } from '../redux/slices/filterSlice';
 export const sortList = [
@@ -11,29 +12,22 @@ export const sortList = [
 ];
 export function Sort() {
   const dispatch = useDispatch();
-  const sortRef = React.useRef();
 
   const sort = useSelector((state) => state.filter.sort);
   const [popupIsOpened, setPopupIsOpened] = React.useState(false);
-
-  React.useEffect(() => {
-    const handleClickOutOfSort = (event) => {
-      if (!event.composedPath().includes(sortRef.current)) {
-        setPopupIsOpened(false);
-      }
-    };
-    document.body.addEventListener('click', handleClickOutOfSort);
-    return () => document.body.removeEventListener('click', handleClickOutOfSort);
-  }, []);
-
+  const ref = React.useRef(null);
+  useClickAway(ref, () => {
+    setPopupIsOpened(false);
+  });
   const onClickSortFunc = (obj) => {
     dispatch(setSort(obj));
     setPopupIsOpened(false);
   };
   return (
-    <div className="sort" ref={sortRef}>
+    <div className="sort" ref={ref}>
       <div className="sort__label">
         <svg
+          className={`${popupIsOpened ? 'svg_active' : ''}`}
           width="10"
           height="6"
           viewBox="0 0 10 6"
@@ -54,7 +48,7 @@ export function Sort() {
               <li
                 onClick={() => onClickSortFunc(item)}
                 key={i}
-                className={sort.sortProperty === item.sortProperty && 'active'}>
+                className={sort.sortProperty === item.sortProperty ? 'active' : ''}>
                 {item.name}
               </li>
             ))}
