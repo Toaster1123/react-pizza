@@ -1,0 +1,26 @@
+.search {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 12px 20px;
+  width: 300px;
+  font-size: 16px;
+  border-radius: 10px;
+  transition: all 0.15s ease-in-out;
+  padding-right: 35px;
+  // &:focus {
+  //   border: 1px solid rgba(0, 0, 0, 0.3);
+  //   width: 450px;
+  // }
+  &__wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  &__close-icon {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+  }
+}
