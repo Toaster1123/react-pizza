@@ -12,6 +12,6 @@ const searchSlice = createSlice({
     },
   },
 });
-
+export const searchSelector = (state) => state.search.searchValue;
 export const { setSearchValue } = searchSlice.actions;
 export default searchSlice.reducer;

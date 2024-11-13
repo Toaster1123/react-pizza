@@ -1,29 +1,36 @@
 import React from 'react';
 import qs from 'qs';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-import { setActiveCategory, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
-import { fetchPizzas } from '../redux/slices/pizzaSlice';
+import {
+  selectFilter,
+  selectSort,
+  setActiveCategory,
+  setCurrentPage,
+  setFilters,
+} from '../redux/slices/filterSlice';
+import { fetchPizzas, selectPizzaData } from '../redux/slices/pizzaSlice';
 import { Sort } from '../components/Sort';
 import { Categories } from '../components/categories';
 import { ItemBlock } from '../components/ItemBlock';
 import { Placeholder } from '../components/ItemBlock/Placeholder';
 import { Pagination } from '../components/Pagination';
 import { sortList } from '../components/Sort';
+import { searchSelector } from '../redux/slices/searchSlice';
 export function Home() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isSearch = React.useRef(false);
   const isMounted = React.useRef(false);
-  const { activeCategory, currentPage } = useSelector((state) => state.filter);
-  const activeSort = useSelector((state) => state.filter.sort);
+  const { activeCategory, currentPage } = useSelector(selectFilter);
+  const activeSort = useSelector(selectSort);
 
-  const { items, status } = useSelector((state) => state.pizza);
+  const { items, status } = useSelector(selectPizzaData);
 
-  const searchValue = useSelector((state) => state.search.searchValue);
+  const searchValue = useSelector(searchSelector);
 
-  const [totalPages, setTotalPages] = React.useState(null);
+  const [totalPages] = React.useState(null);
 
   const onChangePage = (number) => {
     dispatch(setCurrentPage(number));
@@ -88,7 +95,11 @@ export function Home() {
                 .filter((obj) => {
                   return obj.title.toLowerCase().includes(searchValue.toLowerCase());
                 })
-                .map((item) => <ItemBlock key={item.id} {...item} />)}
+                .map((item) => (
+                  <Link key={item.id} to={`/pizza/${item.id}`}>
+                    <ItemBlock {...item} />
+                  </Link>
+                ))}
         </div>
       )}
 
