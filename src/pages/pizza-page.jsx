@@ -1,10 +1,12 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export const PizzaPage = () => {
   const [itemData, setItemData] = React.useState();
   const { id } = useParams();
+  const navigate = useNavigate();
+
   React.useEffect(() => {
     async function fetthData() {
       try {
@@ -12,7 +14,8 @@ export const PizzaPage = () => {
         setItemData(data);
         console.log(itemData);
       } catch (error) {
-        console.error(error);
+        alert('Такой пиццы нету ( ');
+        navigate('/');
       }
     }
     fetthData();
