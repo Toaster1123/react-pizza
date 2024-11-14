@@ -4,27 +4,27 @@ import { useDispatch } from 'react-redux';
 import { setSearchValue } from '../../redux/slices/searchSlice';
 import debounce from 'lodash.debounce';
 
-export function Search() {
+export const Search: React.FC = () => {
   const [value, setValue] = React.useState('');
 
   const updateSearchValue = React.useCallback(
-    debounce((value) => {
+    debounce((value: string) => {
       console.log(value);
       dispatch(setSearchValue(value));
     }, 400),
     [],
   );
   const dispatch = useDispatch();
-  const inputRef = React.useRef();
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
-  const onChangeInput = (event) => {
+  const onChangeInput = (event: any) => {
     setValue(event.target.value);
     updateSearchValue(event.target.value);
   };
   const onClickClear = () => {
     dispatch(setSearchValue(''));
     setValue('');
-    inputRef.current.focus();
+    inputRef.current?.focus();
   };
   return (
     <div className={Styles.search__wrapper}>
@@ -63,4 +63,4 @@ export function Search() {
       )}
     </div>
   );
-}
+};

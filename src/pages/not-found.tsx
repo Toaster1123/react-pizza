@@ -1,6 +1,4 @@
-import React from 'react';
-
-export const NotFound = () => {
+export const NotFound: React.FC = () => {
   return (
     <div className="cart cart--empty">
       <span> 🫤</span>

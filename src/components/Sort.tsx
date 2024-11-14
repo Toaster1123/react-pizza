@@ -2,7 +2,11 @@ import React from 'react';
 import { useClickAway } from 'react-use';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectSort, setSort } from '../redux/slices/filterSlice';
-export const sortList = [
+type SortItem = {
+  name: string;
+  sortProperty: string;
+};
+export const sortList: SortItem[] = [
   { name: 'популярности ↓', sortProperty: 'rating' },
   { name: 'популярности ↑', sortProperty: '-rating' },
   { name: 'цене ↓', sortProperty: 'price' },
@@ -19,7 +23,7 @@ export function Sort() {
   useClickAway(ref, () => {
     setPopupIsOpened(false);
   });
-  const onClickSortFunc = (obj) => {
+  const onClickSortFunc = (obj: SortItem) => {
     dispatch(setSort(obj));
     setPopupIsOpened(false);
   };

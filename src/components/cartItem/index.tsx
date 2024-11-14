@@ -1,10 +1,24 @@
-import React from 'react';
 import { useDispatch } from 'react-redux';
-
 import { addItem, minusItem, removeItem } from '../../redux/slices/cartSlice';
 
-export const CartItem = ({ obj }) => {
-  const id = obj.id;
+type CartItemProps = {
+  id: string;
+  title: string;
+  type: string;
+  size: number;
+  price: number;
+  count: number;
+  imageUrl: string;
+};
+export const CartItem: React.FC<CartItemProps> = ({
+  id,
+  title,
+  type,
+  size,
+  price,
+  count,
+  imageUrl,
+}) => {
   const dispatch = useDispatch();
   const onClickPlus = () => {
     dispatch(addItem({ id }));
@@ -17,25 +31,25 @@ export const CartItem = ({ obj }) => {
       dispatch(removeItem(id));
     }
   };
-  if (obj.count <= 0) {
+  if (count <= 0) {
     return null;
   }
   return (
-    <div key={obj.id} className="cart__item">
+    <div key={id} className="cart__item">
       <div className="cart__item-img">
-        <img className="pizza-block__image" src={obj.imageUrl} alt="Pizza" />
+        <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
       </div>
       <div className="cart__item-info">
-        <h3>{obj.title}</h3>
+        <h3>{title}</h3>
         <p>
-          {obj.type}, {obj.size} см.
+          {type}, {size} см.
         </p>
       </div>
       <div className="cart__item-count">
         <div
           onClick={onClickMinus}
           className="button button--outline button--circle cart__item-count-minus">
-          {obj.count > 1 ? (
+          {count > 1 ? (
             <svg
               width="10"
               height="10"
@@ -89,7 +103,7 @@ export const CartItem = ({ obj }) => {
             </svg>
           )}
         </div>
-        <b>{obj.count}</b>
+        <b>{count}</b>
         <div
           onClick={onClickPlus}
           className="button button--outline button--circle cart__item-count-plus">
@@ -111,8 +125,8 @@ export const CartItem = ({ obj }) => {
         </div>
       </div>
       <div className="cart__item-price">
-        <b>{obj.price * obj.count}₽</b>
-        {obj.count > 1 && <span className="cart__item-price_more">{obj.price} ₽ / шт.</span>}
+        <b>{price * count}₽</b>
+        {count > 1 && <span className="cart__item-price_more">{price} ₽ / шт.</span>}
       </div>
       <div className="cart__item-remove">
         <div onClick={onClickRemove} className="button button--outline button--circle">

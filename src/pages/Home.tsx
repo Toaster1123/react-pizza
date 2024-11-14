@@ -1,7 +1,7 @@
 import React from 'react';
 import qs from 'qs';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import {
   selectFilter,
@@ -18,21 +18,19 @@ import { Placeholder } from '../components/ItemBlock/Placeholder';
 import { Pagination } from '../components/Pagination';
 import { sortList } from '../components/Sort';
 import { searchSelector } from '../redux/slices/searchSlice';
-export function Home() {
+export const Home: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isSearch = React.useRef(false);
   const isMounted = React.useRef(false);
   const { activeCategory, currentPage } = useSelector(selectFilter);
   const activeSort = useSelector(selectSort);
-
+  const totalPages = 3;
   const { items, status } = useSelector(selectPizzaData);
 
   const searchValue = useSelector(searchSelector);
 
-  const [totalPages] = React.useState(null);
-
-  const onChangePage = (number) => {
+  const onChangePage = (number: number) => {
     dispatch(setCurrentPage(number));
   };
   React.useEffect(() => {
@@ -42,6 +40,7 @@ export function Home() {
       dispatch(
         setFilters({
           ...params,
+          //@ts-ignore
           sort: { name: sortParam.name, sortProperty: sortParam.sortProperty },
         }),
       );
@@ -67,6 +66,7 @@ export function Home() {
       const sortBy = activeSort.sortProperty;
       const page = `&page=${currentPage}`;
       const perPage = `&limit=8`;
+      //@ts-ignore
       dispatch(fetchPizzas({ category, sortBy, page, perPage }));
     }
 
@@ -78,7 +78,7 @@ export function Home() {
       <div className="content__top">
         <Categories
           value={activeCategory}
-          onClickCategory={(id) => dispatch(setActiveCategory(id))}
+          onClickCategory={(id: number) => dispatch(setActiveCategory(id))}
         />
         <Sort />
       </div>
@@ -92,18 +92,14 @@ export function Home() {
           {status == 'loading'
             ? [...Array(6)].map((_, index) => <Placeholder key={index} />)
             : items
-                .filter((obj) => {
+                .filter((obj: any) => {
                   return obj.title.toLowerCase().includes(searchValue.toLowerCase());
                 })
-                .map((item) => (
-                  <Link key={item.id} to={`/pizza/${item.id}`}>
-                    <ItemBlock {...item} />
-                  </Link>
-                ))}
+                .map((item: any) => <ItemBlock key={item.id} {...item} />)}
         </div>
       )}
 
       <Pagination currentPage={currentPage} onChangePage={onChangePage} totalPages={totalPages} />
     </>
   );
-}
+};

@@ -1,7 +1,16 @@
-import React from 'react';
 import ReactPaginate from 'react-paginate';
 import Styles from './Pagination.module.scss';
-export function Pagination({ currentPage, onChangePage, totalPages }) {
+
+type PaginationProps = {
+  currentPage: number;
+  onChangePage: any;
+  totalPages: number;
+};
+export const Pagination: React.FC<PaginationProps> = ({
+  currentPage,
+  onChangePage,
+  totalPages,
+}) => {
   return (
     <ReactPaginate
       className={Styles.root}
@@ -15,4 +24,4 @@ export function Pagination({ currentPage, onChangePage, totalPages }) {
       renderOnZeroPageCount={null}
     />
   );
-}
+};

@@ -1,7 +1,7 @@
 import React from 'react';
 import ContentLoader from 'react-content-loader';
 
-export const Placeholder = (props) => (
+export const Placeholder: React.FC = (props) => (
   <ContentLoader
     speed={2}
     width={280}
