@@ -16,7 +16,6 @@ export const PizzaPage: React.FC = () => {
       try {
         const { data } = await axios.get(`https://25f07d3b31d1ec56.mokky.dev/pizzas/${id}`);
         setItemData(data);
-        console.log(itemData);
       } catch (error) {
         alert('Такой пиццы нету ( ');
         navigate('/');

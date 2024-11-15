@@ -1,25 +1,22 @@
 import React from 'react';
 import qs from 'qs';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import {
-  selectFilter,
-  selectSort,
-  setActiveCategory,
-  setCurrentPage,
-  setFilters,
-} from '../redux/slices/filterSlice';
-import { fetchPizzas, selectPizzaData } from '../redux/slices/pizzaSlice';
-import { Sort } from '../components/Sort';
+import { SortComponent } from '../components/Sort';
 import { Categories } from '../components/categories';
 import { ItemBlock } from '../components/ItemBlock';
 import { Placeholder } from '../components/ItemBlock/Placeholder';
 import { Pagination } from '../components/Pagination';
 import { sortList } from '../components/Sort';
-import { searchSelector } from '../redux/slices/searchSlice';
+import { useAppDispatch } from '../redux/store';
+import { selectFilter, selectSort } from '../redux/filter/selectors';
+import { selectPizzaData } from '../redux/pizza/selectors';
+import { searchSelector } from '../redux/seach/selectors';
+import { setActiveCategory, setCurrentPage, setFilters } from '../redux/filter/slice';
+import { fetchPizzas } from '../redux/pizza/asyncActions';
 export const Home: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const isSearch = React.useRef(false);
   const isMounted = React.useRef(false);
@@ -33,17 +30,23 @@ export const Home: React.FC = () => {
   const onChangePage = (number: number) => {
     dispatch(setCurrentPage(number));
   };
+  const onChangeCategory = React.useCallback((id: number) => {
+    dispatch(setActiveCategory(id));
+  }, []);
   React.useEffect(() => {
     if (window.location.search) {
       const params = qs.parse(window.location.search.substring(1));
       const sortParam = sortList.find((obj) => obj.sortProperty === params.sortProperty);
-      dispatch(
-        setFilters({
-          ...params,
-          //@ts-ignore
-          sort: { name: sortParam.name, sortProperty: sortParam.sortProperty },
-        }),
-      );
+      if (sortParam) {
+        dispatch(
+          setFilters({
+            ...params,
+            sort: { name: sortParam.name, sortProperty: sortParam.sortProperty },
+            activeCategory: 0,
+            currentPage: 0,
+          }),
+        );
+      }
       isSearch.current = true;
     }
   }, []);
@@ -66,21 +69,16 @@ export const Home: React.FC = () => {
       const sortBy = activeSort.sortProperty;
       const page = `&page=${currentPage}`;
       const perPage = `&limit=8`;
-      //@ts-ignore
       dispatch(fetchPizzas({ category, sortBy, page, perPage }));
     }
 
     window.scrollTo(0, 0);
   }, [activeCategory, activeSort, currentPage]);
-
   return (
     <>
       <div className="content__top">
-        <Categories
-          value={activeCategory}
-          onClickCategory={(id: number) => dispatch(setActiveCategory(id))}
-        />
-        <Sort />
+        <Categories value={activeCategory} onClickCategory={onChangeCategory} />
+        <SortComponent value={activeSort} />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       {status == 'error' ? (

@@ -1,23 +1,25 @@
 import React from 'react';
 import { useClickAway } from 'react-use';
-import { useSelector, useDispatch } from 'react-redux';
-import { selectSort, setSort } from '../redux/slices/filterSlice';
+import { useDispatch } from 'react-redux';
+import { SortPropertyEnum } from '../redux/filter/types';
+import { setSort } from '../redux/filter/slice';
 type SortItem = {
   name: string;
-  sortProperty: string;
+  sortProperty: SortPropertyEnum;
+};
+type SortPopUpProps = {
+  value: SortItem;
 };
 export const sortList: SortItem[] = [
-  { name: 'популярности ↓', sortProperty: 'rating' },
-  { name: 'популярности ↑', sortProperty: '-rating' },
-  { name: 'цене ↓', sortProperty: 'price' },
-  { name: 'цене ↑', sortProperty: '-price' },
-  { name: 'алфавиту ↓', sortProperty: 'title' },
-  { name: 'алфавиту ↑', sortProperty: '-title' },
+  { name: 'популярности ↓', sortProperty: SortPropertyEnum.RATING_DESC },
+  { name: 'популярности ↑', sortProperty: SortPropertyEnum.RATING_ASC },
+  { name: 'цене ↓', sortProperty: SortPropertyEnum.PRICE_DESC },
+  { name: 'цене ↑', sortProperty: SortPropertyEnum.PRICE_ASC },
+  { name: 'алфавиту ↓', sortProperty: SortPropertyEnum.TITLE_DESC },
+  { name: 'алфавиту ↑', sortProperty: SortPropertyEnum.TITLE_ASC },
 ];
-export function Sort() {
+export const SortComponent: React.FC<SortPopUpProps> = React.memo(({ value }) => {
   const dispatch = useDispatch();
-
-  const sort = useSelector(selectSort);
   const [popupIsOpened, setPopupIsOpened] = React.useState(false);
   const ref = React.useRef(null);
   useClickAway(ref, () => {
@@ -43,7 +45,7 @@ export function Sort() {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setPopupIsOpened(!popupIsOpened)}>{sort.name}</span>
+        <span onClick={() => setPopupIsOpened(!popupIsOpened)}>{value.name}</span>
       </div>
       {popupIsOpened && (
         <div className="sort__popup">
@@ -52,7 +54,7 @@ export function Sort() {
               <li
                 onClick={() => onClickSortFunc(item)}
                 key={i}
-                className={sort.sortProperty === item.sortProperty ? 'active' : ''}>
+                className={value.sortProperty === item.sortProperty ? 'active' : ''}>
                 {item.name}
               </li>
             ))}
@@ -61,4 +63,4 @@ export function Sort() {
       )}
     </div>
   );
-}
+});
