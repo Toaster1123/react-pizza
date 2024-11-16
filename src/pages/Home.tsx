@@ -3,27 +3,29 @@ import qs from 'qs';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { SortComponent } from '../components/Sort';
-import { Categories } from '../components/categories';
-import { ItemBlock } from '../components/ItemBlock';
-import { Placeholder } from '../components/ItemBlock/Placeholder';
-import { Pagination } from '../components/Pagination';
-import { sortList } from '../components/Sort';
+import {
+  SortComponent,
+  Categories,
+  ItemBlock,
+  Placeholder,
+  Pagination,
+  sortList,
+} from '../components';
 import { useAppDispatch } from '../redux/store';
 import { selectFilter, selectSort } from '../redux/filter/selectors';
 import { selectPizzaData } from '../redux/pizza/selectors';
 import { searchSelector } from '../redux/seach/selectors';
 import { setActiveCategory, setCurrentPage, setFilters } from '../redux/filter/slice';
 import { fetchPizzas } from '../redux/pizza/asyncActions';
-export const Home: React.FC = () => {
+
+const Home: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const isSearch = React.useRef(false);
   const isMounted = React.useRef(false);
   const { activeCategory, currentPage } = useSelector(selectFilter);
   const activeSort = useSelector(selectSort);
-  const totalPages = 3;
-  const { items, status } = useSelector(selectPizzaData);
+  const { items, status, totalPages } = useSelector(selectPizzaData);
 
   const searchValue = useSelector(searchSelector);
 
@@ -33,24 +35,24 @@ export const Home: React.FC = () => {
   const onChangeCategory = React.useCallback((id: number) => {
     dispatch(setActiveCategory(id));
   }, []);
-  React.useEffect(() => {
-    if (window.location.search) {
-      const params = qs.parse(window.location.search.substring(1));
-      const sortParam = sortList.find((obj) => obj.sortProperty === params.sortProperty);
-      if (sortParam) {
-        dispatch(
-          setFilters({
-            ...params,
-            sort: { name: sortParam.name, sortProperty: sortParam.sortProperty },
-            activeCategory: 0,
-            currentPage: 0,
-          }),
-        );
-      }
-      isSearch.current = true;
-    }
-  }, []);
-
+  // React.useEffect(() => {
+  //   if (window.location.search) {
+  //     const params = qs.parse(window.location.search.substring(1));
+  //     const sortParam = sortList.find((obj) => obj.sortProperty === params.sortProperty);
+  //     if (sortParam) {
+  //       dispatch(
+  //         setFilters({
+  //           ...params,
+  //           sort: { name: sortParam.name, sortProperty: sortParam.sortProperty },
+  //           activeCategory: 0,
+  //           currentPage: 1,
+  //         }),
+  //       );
+  //     }
+  //     isSearch.current = true;
+  //   }
+  // }, []);
+  console.log(isSearch.current);
   React.useEffect(() => {
     if (isMounted.current) {
       const queryString = qs.stringify({
@@ -72,7 +74,7 @@ export const Home: React.FC = () => {
       dispatch(fetchPizzas({ category, sortBy, page, perPage }));
     }
 
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [activeCategory, activeSort, currentPage]);
   return (
     <>
@@ -101,3 +103,4 @@ export const Home: React.FC = () => {
     </>
   );
 };
+export default Home;

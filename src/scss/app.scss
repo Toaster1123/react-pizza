@@ -6,6 +6,16 @@
 body {
   background-color: $background;
 }
+.pizza-page-desc {
+  margin-left: 20px;
+  img {
+    margin-left: -9px;
+  }
+  .pizza-page-price {
+    margin: 20px 0;
+    font-size: 20px;
+  }
+}
 .cart__item-price {
   display: flex;
   flex-direction: column;

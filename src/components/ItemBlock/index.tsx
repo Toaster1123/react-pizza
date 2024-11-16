@@ -90,7 +90,7 @@ export const ItemBlock: React.FC<PizzaBlockProps> = ({
             {addCount > 0 && <i>{addCount}</i>}
           </div>
         </div>
-      </div>{' '}
+      </div>
     </div>
   );
 };
